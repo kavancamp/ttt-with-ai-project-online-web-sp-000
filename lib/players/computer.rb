@@ -36,7 +36,6 @@ module Players
       def win(board)
         win_position = nil
         combos.each do |combo|
-
           position_1 = board.cells[combo[0]]
           position_2 = board.cells[combo[1]]
           position_3 = board.cells[combo[2]]
