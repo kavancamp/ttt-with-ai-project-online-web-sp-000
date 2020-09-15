@@ -1,38 +1,27 @@
 module Players
   class Computer < Player
-  attr_accessor :token, :combos
-    def initialize(token)
-     @token = token
-       @combos = Game::WIN_COMBINATIONS
-       @opponents_token = "O" if @token == "X"
-       @opponents_token = "X" if @token == "O"
+    def initialize(token, first)
+      super(token)
+      if first
+        d_token = token
+      else
+        d_token = token == 'X' ? 'O' : 'X'
+      end
+      data = {board: Array.new(9,' '), turn:d_token, score:nil }
+      @tree = Tree.new(data, token)
     end
-
 
     def move(board)
-    move_index =
-  case
-     when take_middle(board)
-      take_middle(board)
-      when win(board)
-        win(board)
-        when block(board)
-          block(board)
-          when corner(board)
-            corner(board)
-            else
-              random(board)
-              end
-              "#{move_index+1}"
-            end
-
-    def take_middle(board)
-      4 if board.turn_count < 4 && !board.taken?(5)
+        next_board = @tree.node_by_board[board.cells].children.max{|a,b| a.data[:score] <=> b.data[:score]}
+        move_index = new_move(board.cells, next_board)
+        move_index +1
     end
 
-
-
-
+    def new_move(board, next_board)
+      board.each.with_index do |el, i|
+      return i if el != next_board.data[:board][i]
+      end
+    end
 
   end
 end
